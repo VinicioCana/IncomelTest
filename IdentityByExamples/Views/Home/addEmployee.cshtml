@@ -1,0 +1,90 @@
+﻿@model Test.Models.Employee
+
+@{
+    ViewData["Title"] = "Agregar Empleado";
+}
+
+<h1>Agregar empleado</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="addEmployee">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Dpi" class="control-label"></label>
+                <input asp-for="Dpi" class="form-control" />
+                <span asp-validation-for="Dpi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Children" class="control-label"></label>
+                <input asp-for="Children" id="numeroHijos" class="form-control" />
+                <span asp-validation-for="Children" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SalaryBase" class="control-label"></label>
+                <input asp-for="SalaryBase" id="salarioBase" class="form-control" />
+                <span asp-validation-for="SalaryBase" class="text-danger"></span>
+            </div>
+
+            
+
+
+            <div class="form-group">
+                <input type="submit" value="Agregar" class="btn btn-primary" />
+            </div>
+        </form>
+
+        <label><strong>Bono decreto : </strong></label><label id="bonoDecreto"></label>
+        <br />
+        <label><strong>IGSS :</strong></label><label id="igss"></label>
+        <label><strong>IRTRA : </strong></label><label id="irtra"></label>
+        <br />
+        <label><strong>Bono de paternidad : </strong></label><label id="bonoPaternidad"></label>
+        <br />
+        <label><strong>Salario Total : </strong></label><label id="salarioTotal"></label>
+        <br />
+        <label class='total'><strong>Salario liquido : </strong></label><label class='total' id="salarioLiquido"></label>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#salarioBase').on('input', function () {
+
+            var salarioBase = $('#salarioBase').val();
+            var numeroHijos = $('#numeroHijos').val();
+            var salarioTotal = 0;
+            var salarioLiquido = 0;
+            var bonoDecreto = 250;
+            var igss  = (salarioBase * 4.83) /100;
+            var irtra = (salarioBase * 1) / 100;
+            var bonoPaternidad = (133 * numeroHijos);
+            var salarioTotal = parseFloat(salarioBase) + parseFloat(bonoPaternidad) + parseFloat(bonoDecreto);
+            var salarioLiquido = parseFloat(salarioTotal) - (parseFloat(igss) + parseFloat(irtra));
+            $("#bonoDecreto").text(bonoDecreto.toFixed(2));
+            $("#igss").text(igss.toFixed(2));
+            $("#irtra").text(irtra.toFixed(2));
+            $("#bonoPaternidad").text(bonoPaternidad.toFixed(2));
+            $("#salarioTotal").text(salarioTotal.toFixed(3));
+            $("#salarioLiquido").text(salarioLiquido.toFixed(3));
+        }); 
+    });
+</script>
+<style>
+    label.total {
+        color: green;
+    }
+</style>
